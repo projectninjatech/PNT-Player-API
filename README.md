@@ -1,4 +1,4 @@
-# MovieAPI
+# Netflix Clone API With NodeJS & MongoDB
 
 ## Description
 This Node.js app serves as a movie API using TMDB (The Movie Database) as a data source. It provides endpoints to access movie information and media files stored locally.
