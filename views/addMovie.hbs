@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/addMovie.css">
+    <title>Movie Details</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">Add Movie</h1>
+    <a href="/">Go to Dashboard</a>
+
+    <div class="movieDetailsContainer">
+        <div class="posterContainer">
+            <img src="https://image.tmdb.org/t/p/original/{{movieDetails.poster_path}}" alt="Movie Poster">
+        </div>
+
+        <div class="detailsTextContainer">
+            <h2>{{movieDetails.title}}</h2>
+            <p style="font-size: 0.8em; margin-bottom:5px">{{movieDetails.overview}}</p>
+            <p style="font-size: 0.8em; font-weight: bold;">{{movieDetails.release_date}} • {{movieDetails.genres}} • {{movieDetails.runtime}}mins</p>
+        </div>
+    </div>
+
+
+    <form class="formContainer" action="/add-movie-details" method="post">
+
+        <label for="id">MovieID:</label>
+        <input type="text" id="id" name="id" value="{{movieDetails.id}}" /><br>
+
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{movieDetails.title}}" /><br>
+
+        <label for="originalTitle">Original Title:</label>
+        <input type="text" id="originalTitle" name="original_title" value="{{movieDetails.original_title}}" /><br>
+
+        <label for="overview">Overview:</label>
+        <input type="text" id="overview" name="overview" value="{{movieDetails.overview}}" /><br>
+
+        <label for="ratings">Ratings:</label>
+        <input type="text" id="ratings" name="ratings" value="{{movieDetails.vote_average}}" /><br>
+
+        <label for="backdropPath">Backdrop Path:</label>
+        <input type="text" id="backdropPath" name="backdrop_path" value="{{movieDetails.backdrop_path}}" /><br>
+
+        <label for="genreIds">Genre ID:</label>
+        <input type="text" id="genreIds" name="genreIds" value="{{movieDetails.genreIds}}" /><br>
+
+        <label for="genres">Genres:</label>
+        <input type="text" id="genres" name="genres" value="{{movieDetails.genres}}" /><br>
+
+        <label for="budget">Budget:</label>
+        <input type="text" id="budget" name="budget" value="{{movieDetails.budget}}" /><br>
+
+        <label for="popularity">Popularity:</label>
+        <input type="text" id="popularity" name="popularity" value="{{movieDetails.popularity}}" /><br>
+
+        <label for="posterPath">Poster Path:</label>
+        <input type="text" id="posterPath" name="poster_path" value="{{movieDetails.poster_path}}" /><br>
+
+        <label for="productionCompanies">Production Companies:</label>
+        <input type="text" id="productionCompanies" name="production_companies"
+            value="{{movieDetails.production_companies}}" /><br>
+
+        <label for="releaseDate">Release Date:</label>
+        <input type="text" id="releaseDate" name="release_date" value="{{movieDetails.release_date}}" /><br>
+
+        <label for="revenue">Revenue:</label>
+        <input type="text" id="revenue" name="revenue" value="{{movieDetails.revenue}}" /><br>
+
+        <label for="runtime">Runtime:</label>
+        <input type="text" id="runtime" name="runtime" value="{{movieDetails.runtime}}" /><br>
+
+
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status" value="{{movieDetails.status}}" /><br>
+
+        <label for="watchProviders">Watch Providers:</label>
+        <input type="text" id="watchProviders" name="watchProviders" value="{{movieDetails.watchProviders}}" /><br>
+
+        <label for="logos">Movie Logo:</label>
+        <input type="text" id="logos" name="logos" value="{{movieDetails.logoFilePath}}" /><br>
+
+        <label for="downloadLink">Download Link:</label>
+        <input type="text" id="downloadLink" name="downloadLink" placeholder="Enter download link" /><br>
+        <button class="submit-btn" type="submit">Add Movie</button>
+    </form>
+
+
+    {{#if errorMessage}}
+    <p style="color: red;">{{errorMessage}}</p>
+    {{/if}}
+
+    {{#if successMessage}}
+    <p style="color: green;">{{successMessage}}</p>
+    {{/if}}
+</body>
+
+</html>

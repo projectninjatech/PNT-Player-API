@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/addMovie.css">
+    <title>TV Show Details</title>
+</head>
+
+<body>
+    <h1 style="text-align: center;">TV Show Details</h1>
+    <a href="/">Go to Dashboard</a>
+
+    <div class="showDetailsContainer">
+        <div class="posterContainer">
+            <img src="{{showsDetails.posterPath}}" alt="Show Poster">
+        </div>
+
+        <div class="detailsTextContainer">
+            <h2>{{showsDetails.name}}</h2>
+            <p style="font-size: 0.8em; margin-bottom:5px">{{showsDetails.overview}}</p>
+            <p style="font-size: 0.8em; font-weight: bold;">{{showsDetails.releaseDate}} • {{showsDetails.genres}} •
+                {{showsDetails.ratings}}/10</p>
+        </div>
+    </div>
+
+
+
+    {{#each showsDetails.seasons}}
+    <div class="seasonContainer">
+        <h3 class="seasonNum">Season {{this.season_number}}</h3>
+        <div>
+            {{#each this.episodes}}
+            <div class="episodeDetailsContainer">
+                <!-- Include episode poster if available -->
+                {{#if this.poster}}
+                <div class="episodePosterContainer">
+                    <img src={{this.poster}} alt="Episode Poster" style="max-width: 100px;">
+                </div>
+                {{/if}}
+                <div class="episodedetailsTextContainer">
+                    <strong>Episode {{this.episode_number}}:</strong> {{this.name}} ({{this.runtime}} mins)
+                    <p>{{this.overview}}</p>
+
+                    <!-- Add a textbox for the download link for each episode -->
+                    <label for="episodeDownloadLink">Download Link:</label>
+                    <input type="text" id="edl{{../season_number}}{{this.episode_number}}"
+                        name="edl{{../season_number}}{{this.episode_number}}" value="{{this.downloadLink}}"
+                        placeholder="Enter download link" /><br>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+    </div>
+    {{/each}}
+
+
+    <button class="submit-btn" type="button" onclick="submitShowsDetails()">Update TV Show</button>
+
+
+
+    {{#if errorMessage}}
+    <p style="color: red;">{{errorMessage}}</p>
+    {{/if}}
+
+    {{#if successMessage}}
+    <p style="color: green;">{{successMessage}}</p>
+    {{/if}}
+</body>
+
+<script>
+    function submitShowsDetails() {
+        // Assuming showsDetails is a JavaScript object
+        var showsDetailsData = {
+            showDetails: {
+                poster_path: "{{showsDetails.posterPath}}",
+                name: "{{showsDetails.name}}",
+                overview: "{{showsDetails.overview}}",
+                first_air_date: "{{showsDetails.releaseDate}}",
+                genres: "{{showsDetails.genres}}",
+                vote_average: "{{showsDetails.ratings}}"
+            },
+            seasons: []
+        };
+
+        {{#each showsDetails.seasons}}
+            var seasonData = {
+                season_number: "{{this.season_number}}",
+                episodes: []
+            };
+
+            {{#each this.episodes}}
+                var episodeData = {
+                    episode_number: "{{this.episode_number}}",
+                    name: "{{this.name}}",
+                    runtime: "{{this.runtime}}",
+                    overview: "{{this.overview}}",
+                    poster: "{{this.poster}}",  // Add poster path if available
+                    downloadLink: document.getElementById("edl{{../season_number}}{{this.episode_number}}").value // Get download link from the input field
+                };
+
+                seasonData.episodes.push(episodeData);
+            {{/each}}
+
+            showsDetailsData.seasons.push(seasonData);
+        {{/each}}
+
+                        // Log the showsDetailsData
+                        console.log("Shows Details on button clicked", showsDetailsData);
+
+                        // You can send this data to the server or perform other actions
+
+                        fetch('/update-show/{{showsDetails._id}}', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(showsDetailsData),
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Success:', data);
+                                if (data.success) {
+                                    alert("Show has been updated successfully!!")
+                                } else {
+                                    alert("Failed to update the show!!")
+                                }
+                                // Handle success response from the server
+                            })
+                            .catch((error) => {
+                                console.error('Error:', error);
+                                // Handle error
+                            });
+                    }
+</script>
+
+<style>
+    .showDetailsContainer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .posterContainer {
+        flex-shrink: 0;
+    }
+
+    .posterContainer img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .detailsTextContainer {
+        flex-grow: 1;
+        margin-left: 20px;
+        /* Adjust the margin as needed */
+    }
+
+    .detailsTextContainer h2 {
+        margin-top: 0;
+        /* Remove default margin for h2 */
+    }
+
+    .seasonNum {
+        text-align: center;
+    }
+
+    .episodeDetailsContainer {
+        display: flex;
+        align-items: flex-start;
+        /* Adjusted alignment to flex-start */
+        justify-content: space-between;
+        max-width: 800px;
+        margin: 0 auto;
+        border-bottom: 1px solid black;
+        margin-top: 10px;
+    }
+
+    .episodePosterContainer {
+        flex-shrink: 0;
+    }
+
+    .episodePosterContainer img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .episodedetailsTextContainer {
+        flex-grow: 1;
+        margin-left: 20px;
+        margin-bottom: 25px;
+        font-size: 0.8em;
+    }
+
+    .episodedetailsTextContainer h2 {
+        margin-top: 0;
+    }
+</style>
+
+</html>

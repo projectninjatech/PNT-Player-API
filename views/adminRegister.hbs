@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Register</title>
+    <!-- Add your stylesheets or link to a CSS file here -->
+</head>
+
+<body>
+    <h1>Admin Register</h1>
+
+    <!-- Display flash messages if there are any -->
+    {{#if errorMessage}}
+    <p style="color: red;">{{errorMessage}}</p>
+    {{/if}}
+    <!-- Admin login form -->
+    <form action="/admin/register" method="POST">
+        {{!-- <label for="username">Username:</label> --}}
+        <input placeholder="Username" type="text" id="username" name="username" required>
+
+        {{!-- <label for="password">Password:</label> --}}
+        <input placeholder="Password" type="password" id="password" name="password" required>
+
+        <input placeholder="Secret Code" type="password" id="secretCode" name="secretCode" required>
+        <button type="submit">Register</button>
+    </form>
+
+<a href="/admin/login">Already an admin. Login!</a>
+    <!-- Add any additional content or styling as needed -->
+</body>
+
+<style>
+    body {
+        font-family: 'Arial', sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+    }
+
+    h1 {
+        color: #333;
+    }
+
+    form {
+        max-width: 300px;
+        margin: 40px auto;
+        padding: 50px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+    }
+
+    input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 16px;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button {
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    p {
+        color: red;
+        margin-top: 10px;
+    }
+</style>
+
+</html>

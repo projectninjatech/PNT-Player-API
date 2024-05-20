@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Show Deletion</title>
+</head>
+
+<body>
+    <h1>Delete Show</h1>
+    <a href="/">Go to Dashboard</a>
+
+    {{#each shows}}
+    <div class="showDetailsContainer">
+        <div class="posterContainer">
+            <img src="https://image.tmdb.org/t/p/original/{{this.posterPath}}" alt="Movie Poster">
+        </div>
+
+        <div class="detailsTextContainer">
+            <h2>{{this.name}}</h2>
+            <p style="font-size: 0.8em; margin-bottom:5px">{{this.overview}}</p>
+            <p style="font-size: 0.8em; font-weight: bold;">Release Date: {{this.releaseDate}}</p>
+            <form action="/delete-show/{{this._id}}" method="post">
+                <button class="delete-btn" type="submit">Delete</button>
+            </form>
+
+        </div>
+    </div>
+    {{/each}}
+
+</body>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .showDetailsContainer {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    .posterContainer {
+        margin-right: 20px;
+    }
+
+    .posterContainer img {
+        width: 100px;
+        height: auto;
+    }
+
+    .detailsTextContainer {
+        text-align: left;
+    }
+
+    .detailsTextContainer h2 {
+        margin-bottom: 10px;
+    }
+
+    .detailsTextContainer p {
+        margin: 0;
+    }
+
+    .delete-btn {
+    padding: 10px;
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+</style>
+
+</html>

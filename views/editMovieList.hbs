@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Movie List</title>
+</head>
+
+<body>
+    <h1>Edit Movie List</h1>
+    <a href="/">Go to Dashboard</a>
+    <ul>
+        {{!-- {{#each movies}}
+        <li>
+            <a href="/movies/{{_id}}">{{title}}</a>
+        </li>
+        {{/each}} --}}
+
+
+        {{#each movies}}
+        <div class="movieDetailsContainer">
+            <div class="posterContainer">
+                {{!-- <img src="https://image.tmdb.org/t/p/original/{{this.posterPath}}" alt="Movie Poster"> --}}
+                <img alt="Movie Poster" data-poster-path="{{this.posterPath}}">
+            </div>
+
+            <div class="detailsTextContainer">
+                {{!-- <a href="/addMovie/{{this._id}}"> --}}
+                    <a href="/movies/{{_id}}">
+                        <h2>{{this.title}}</h2>
+                    </a>
+                    {{!-- </a> --}}
+                <p style="font-size: 0.8em; margin-bottom:5px">{{this.overview}}</p>
+                <p style="font-size: 0.8em; font-weight: bold;">Release Date: {{this.releaseDate}}</p>
+
+                {{!-- <a href="/addMovie/{{this.id}}">Add this movie</a> --}}
+            </div>
+        </div>
+        {{/each}}
+
+
+    </ul>
+</body>
+
+<script>
+    // Get all poster images
+    const posterImages = document.querySelectorAll('.posterContainer img');
+
+    // Iterate through each poster image
+    posterImages.forEach(img => {
+        const posterPath = img.dataset.posterPath;
+        img.src = posterPath;
+    });
+</script>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
+    body {
+        font-family: 'Poppins', sans-serif;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    .movieDetailsContainer {
+
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        width: 50%;
+        margin: 0 auto;
+    }
+
+    .posterContainer {
+        margin-right: 20px;
+    }
+
+    .posterContainer img {
+        width: 100px;
+        height: auto;
+    }
+
+    .detailsTextContainer {
+        text-align: left;
+    }
+
+    .detailsTextContainer h2 {
+        margin-bottom: 10px;
+    }
+
+    .detailsTextContainer p {
+        margin: 0;
+    }
+
+    a {
+        text-decoration: none;
+        color: :'black';
+    }
+</style>
+
+</html>

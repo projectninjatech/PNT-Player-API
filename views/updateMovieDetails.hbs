@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/updateMovieDetails.css">
+    <title>Update Movie Details</title>
+</head>
+
+<body>
+    {{!-- <h1>{{movie.title}}</h1> --}}
+
+    <h1>Update Movie Details</h1>
+    <a href="/">Go to Dashboard</a>
+    <div class="movieDetailsContainer">
+        <div class="posterContainer">
+            {{!-- <img src="https://image.tmdb.org/t/p/original/{{movie.posterPath}}" alt="Movie Poster"> --}}
+            <img alt="Movie Poster" data-poster-path="{{movie.posterPath}}">
+        </div>
+
+        <div class="detailsTextContainer">
+            <h2>{{movie.title}}</h2>
+            <p style="font-size: 0.8em; margin-bottom:5px">{{movie.overview}}</p>
+            <p style="font-size: 0.8em; font-weight: bold;">{{movie.releaseDate}} • {{movie.genres}} •
+                {{movie.runtime}}mins</p>
+        </div>
+    </div>
+    <form class="formContainer" action="/update-movie/{{movie._id}}" method="post">
+
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" value="{{movie.id}}" /><br>
+
+        <label for="movieID">MovieID:</label>
+        <input type="text" id="movieID" name="movieID" value="{{movie.movieID}}" /><br>
+
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" value="{{movie.title}}" /><br>
+
+        <label for="originalTitle">Original Title:</label>
+        <input type="text" id="originalTitle" name="originalTitle" value="{{movie.originalTitle}}" /><br>
+
+        <label for="overview">Overview:</label>
+        <input type="text" id="overview" name="overview" value="{{movie.overview}}" /><br>
+
+        <label for="ratings">Ratings:</label>
+        <input type="text" id="ratings" name="ratings" value="{{movie.ratings}}" /><br>
+
+        <label for="backdropPath">Backdrop Path:</label>
+        <input type="text" id="backdropPath" name="backdropPath" value="{{movie.backdropPath}}" /><br>
+
+        <label for="genreIds">Genre ID:</label>
+        <input type="text" id="genreIds" name="genreIds" value="{{movie.genreIds}}" /><br>
+
+        <label for="genres">Genres:</label>
+        <input type="text" id="genres" name="genres" value="{{movie.genres}}" /><br>
+
+        <label for="budget">Budget:</label>
+        <input type="text" id="budget" name="budget" value="{{movie.budget}}" /><br>
+
+        <label for="popularity">Popularity:</label>
+        <input type="text" id="popularity" name="popularity" value="{{movie.popularity}}" /><br>
+
+        <label for="posterPath">Poster Path:</label>
+        <input type="text" id="posterPath" name="posterPath" value="{{movie.posterPath}}" /><br>
+
+        <label for="productionCompanies">Production Companies:</label>
+        <input type="text" id="productionCompanies" name="productionCompanies"
+            value="{{movie.productionCompanies}}" /><br>
+
+        <label for="releaseDate">Release Date:</label>
+        <input type="text" id="releaseDate" name="releaseDate" value="{{movie.releaseDate}}" /><br>
+
+        <label for="revenue">Revenue:</label>
+        <input type="text" id="revenue" name="revenue" value="{{movie.revenue}}" /><br>
+
+        <label for="runtime">Runtime:</label>
+        <input type="text" id="runtime" name="runtime" value="{{movie.runtime}}" /><br>
+
+        <label for="status">Status:</label>
+        <input type="text" id="status" name="status" value="{{movie.status}}" /><br>
+
+        <label for="watchProviders">Watch Providers:</label>
+        <input type="text" id="watchProviders" name="watchProviders" value="{{movie.watchProviders}}" /><br>
+
+        <label for="logos">Movie Logo:</label>
+        <input type="text" id="logos" name="logos" value="{{movie.logos}}" /><br>
+
+        <label for="downloadLink">Download Link:</label>
+        <input type="text" id="downloadLink" name="downloadLink" value="{{movie.downloadLink}}" /><br>
+
+        <button class="submit-btn" type="submit">Update Details</button>
+    </form>
+
+    {{#if successMessage}}
+    <p style="color: green;">{{successMessage}}</p>
+    {{/if}}
+
+    <script>
+        // Get all poster images
+        const posterImage = document.querySelector('.posterContainer img');
+        const posterPath = posterImage.getAttribute('data-poster-path');
+        posterImage.src = posterPath;
+    </script>
+</body>
+
+</html>
