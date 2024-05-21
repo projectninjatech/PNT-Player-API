@@ -3,7 +3,6 @@ const router = express.Router();
 const isLoggedIn = require('../routes/isLoggedin')
 const Shows = require('../models/Shows')
 
-
 router.get('/all-watched-shows', isLoggedIn, async (req, res) => {
     try {
         const user = req.user;
@@ -41,7 +40,7 @@ router.get('/all-watched-shows', isLoggedIn, async (req, res) => {
             }
 
             return {
-                id:_id,
+                id: _id,
                 episodeInfo,
                 watchedTime,
                 uploadTime,
@@ -159,44 +158,27 @@ router.get('/episode-info/:episodeId', async (req, res) => {
     }
 });
 
+// This will generate the latest episode ID watched by the user from a particular show
+router.get('/get-latest-watched-episodeID/:showID', isLoggedIn, async (req, res) => {
+    try {
+        const { showID } = req.params;
+        const user = req.user;
+        const watchedShows = user.watchedShows.filter(show => show.showID.toString() === showID);
+        if (watchedShows.length === 0) {
+            return res.json({ episodeID: null });
+        }
 
+        // Sort watched episodes by uploadTime in descending order
+        watchedShows.sort((a, b) => b.uploadTime - a.uploadTime);
 
-// router.get('/episode-info/:episodeId', async (req, res) => {
-//     try {
-//         const episodeId = req.params.episodeId;
+        // Get the episodeID of the latest episode
+        const latestEpisodeID = watchedShows[0].episode;
 
-//         // Find the episode in your data
-//         const shows = await Shows.find(); // Retrieve shows from your database
-//         let episodeInfo = null;
+        res.json({ episodeID: latestEpisodeID });
 
-//         for (const show of shows) {
-//             for (const season of show.seasons) {
-//                 const foundEpisode = season.episodes.find(ep => ep._id.toString() === episodeId);
-
-//                 if (foundEpisode) {
-//                     episodeInfo = {
-//                         showId: show._id,
-//                         showName: show.name,
-//                         seasonNumber: season.season_number,
-//                         episodeNumber: foundEpisode.episode_number
-//                     };
-//                     break;
-//                 }
-//             }
-
-//             if (episodeInfo) {
-//                 break;
-//             }
-//         }
-
-//         if (episodeInfo) {
-//             res.json({ success: true, episodeInfo });
-//         } else {
-//             res.status(404).json({ success: false, message: 'Episode not found' });
-//         }
-//     } catch (error) {
-//         res.status(500).json({ success: false, error: error.message });
-//     }
-// });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
 
 module.exports = router;

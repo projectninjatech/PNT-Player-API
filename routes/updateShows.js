@@ -35,7 +35,7 @@ router.post('/update-show/:id', async (req, res) => {
 
         console.log("Request body", req.body)
 
-        const updatedShow = await Shows.findByIdAndUpdate(
+        await Shows.findByIdAndUpdate(
             req.params.id,
             {
                 genres: req.body.showDetails.genres.split(',').map(genre => genre.trim()),
@@ -59,10 +59,6 @@ router.post('/update-show/:id', async (req, res) => {
             { new: true }
         );
 
-        // res.render('updateMovieDetails', {
-        //     movie: updatedShow,
-        //     successMessage: 'Movie updated successfully!',
-        // });
         res.json({ success: true })
     } catch (error) {
         console.error(error);

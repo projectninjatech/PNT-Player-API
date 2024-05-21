@@ -1,7 +1,6 @@
 // routes/movies.js
 const express = require('express');
 const router = express.Router();
-const isLoggedIn = require('../routes/isLoggedin')
 const Shows = require('../models/Shows')
 
 // Endpoint to get all movies
@@ -80,28 +79,5 @@ router.get('/searchShows/:showName', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
-
-router.get('/get-latest-watched-episodeID/:showID', isLoggedIn, async (req, res) => {
-  try {
-    const { showID } = req.params;
-    const user = req.user;
-    const watchedShows = user.watchedShows.filter(show => show.showID.toString() === showID);
-    if (watchedShows.length === 0) {
-      return res.json({ episodeID: null });
-    }
-
-    // Sort watched episodes by uploadTime in descending order
-    watchedShows.sort((a, b) => b.uploadTime - a.uploadTime);
-
-    // Get the episodeID of the latest episode
-    const latestEpisodeID = watchedShows[0].episode;
-
-    res.json({ episodeID: latestEpisodeID });
-
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
-});
-
 
 module.exports = router;

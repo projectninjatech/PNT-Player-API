@@ -3,7 +3,6 @@ const router = express.Router();
 const isLoggedIn = require('../routes/isLoggedin')
 const Shows = require('../models/Shows')
 
-
 router.post('/add-show-to-mylist/:showID', isLoggedIn, async (req, res) => {
     try {
         const user = req.user;
@@ -38,7 +37,6 @@ router.get('/showsMylist', isLoggedIn, async (req, res) => {
         res.status(500).json({ success: false, error: error.message });
     }
 });
-
 
 
 module.exports = router;
