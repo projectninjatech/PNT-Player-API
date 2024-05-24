@@ -5,6 +5,7 @@ const showsSchema = new mongoose.Schema({
     overview: String,
     genres: [String],
     posterPath: String,
+    backdropPath: String,
     releaseDate: Date,
     ratings: Number,
     seasons: [{

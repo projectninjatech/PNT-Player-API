@@ -54,12 +54,13 @@ router.get('/addShows/:showID', async (req, res) => {
 
         const genreIds = showsDetails.genres.map(genre => genre.id);
         const genreNames = showsDetails.genres.map(genre => genre.name);
+        console.log("Genre Names are as follows",genreNames)
         showsDetails.production_companies = showsDetails.production_companies.map(company => company.name);
 
         showsDetails.genreIds = genreIds;
         showsDetails.genres = genreNames;
 
-        // console.log("TV Shows Details", showsDetails)
+        console.log("TV Shows Details", showsDetails)
 
         // Render the addMovie page with the details of the selected movie
         // res.render('addMovie', { movieDetails });
@@ -98,6 +99,7 @@ router.get('/addShows/:showID', async (req, res) => {
             name: showsDetails.name,
             overview: showsDetails.overview,
             poster_path: "https://image.tmdb.org/t/p/original"+showsDetails.poster_path,
+            backdrop_path: "https://image.tmdb.org/t/p/original"+showsDetails.backdrop_path,
             vote_average: showsDetails.vote_average,
             seasons: showsDetails.seasons
         };
@@ -116,13 +118,15 @@ router.post('/add-show-details', async (req, res) => {
     try {
         const showsDetailsData = req.body;
 
-        console.log("Show Details", showsDetailsData)
+        console.log("Show Details on adding", showsDetailsData)
 
 
         const newShowsDocument = new Shows({
-            genres: showsDetailsData.showDetails.genres.split(',').map(genre => genre.trim()), // Convert comma-separated genres to an array
+            // genres: showsDetailsData.showDetails.genres.split(',').map(genre => genre.trim()), // Convert comma-separated genres to an array
+            genres: showsDetailsData.showDetails.genres.replaceAll('amp;', '').split(',').map(genre => genre.trim()),
             overview: showsDetailsData.showDetails.overview,
             posterPath: showsDetailsData.showDetails.poster_path,
+            backdropPath: showsDetailsData.showDetails.backdrop_path,
             releaseDate: new Date(showsDetailsData.showDetails.first_air_date),
             name: showsDetailsData.showDetails.name,
             ratings: Number(showsDetailsData.showDetails.vote_average), // Add the correct property if available in showsDetailsData

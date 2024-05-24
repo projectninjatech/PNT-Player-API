@@ -86,6 +86,7 @@ async function fetchDetailedShowDetails(showID, options) {
         name: showsDetails.name,
         overview: showsDetails.overview,
         poster_path: "https://image.tmdb.org/t/p/original" + showsDetails.poster_path,
+        backdrop_path: "https://image.tmdb.org/t/p/original"+showsDetails.backdrop_path,
         vote_average: showsDetails.vote_average,
         seasons: showsDetails.seasons
     };
@@ -189,11 +190,13 @@ router.get('/scanAllShows', async (req, res) => {
                     console.log(`Show '${modifiedShow.showDetails.name}' already exists. Skipping...`);
                 } else {
 
+                    console.log("Modified Show details are", modifiedShow)
                     // Use your existing code for adding shows manually
                     const newShowsDocument = new Shows({
                         genres: modifiedShow.showDetails.genres,
                         overview: modifiedShow.showDetails.overview,
                         posterPath: modifiedShow.showDetails.poster_path,
+                        backdropPath: modifiedShow.showDetails.backdrop_path,
                         releaseDate: new Date(modifiedShow.showDetails.first_air_date),
                         name: modifiedShow.showDetails.name,
                         ratings: modifiedShow.showDetails.vote_average,

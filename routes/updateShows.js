@@ -43,6 +43,7 @@ router.post('/update-show/:id', async (req, res) => {
                 overview: req.body.showDetails.overview,
                 ratings: Number(req.body.showDetails.vote_average),
                 posterPath: req.body.showDetails.poster_path,
+                backdropPath: req.body.showDetails.backdrop_path,
                 releaseDate: req.body.showDetails.first_air_date,
                 seasons: req.body.seasons.map(season => ({
                     season_number: Number(season.season_number),

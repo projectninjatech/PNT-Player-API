@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
@@ -94,7 +95,7 @@ router.post('/admin/register', async (req, res) => {
     try {
         // Check if the secret code is valid
         const secretCode = req.body.secretCode;
-        if (secretCode !== 'abcd1234') {
+        if (secretCode !== process.env.ADMIN_REGISTER_SECRET_CODE) {
             return res.render('adminRegister', { errorMessage: 'Invalid secret code' });
         }
 
