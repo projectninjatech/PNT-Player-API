@@ -46,4 +46,11 @@ router.get('/poster-link-update', isAdminAuthenticated, (req, res) => {
   res.render('managePosters.hbs');
 });
 
+router.get('/scan-all-movie-page', isAdminAuthenticated, (req, res) => {
+  res.render('scanAllMovies.hbs');
+});
+
+router.get('/scan-all-shows-page', isAdminAuthenticated, (req, res) => {
+  res.render('scanAllShows.hbs');
+});
 module.exports = router;

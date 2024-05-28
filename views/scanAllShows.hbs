@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Shows Scanner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+        }
+        h1 {
+            color: #343a40;
+            margin-bottom: 20px;
+        }
+        #scanMoviesButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        #scanMoviesButton:hover {
+            background-color: #0056b3;
+        }
+        #progress {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            overflow: hidden;
+            border: 1px solid #ced4da;
+            height: 30px;
+            margin-top: 10px;
+        }
+        .progress-bar-inner {
+            height: 100%;
+            background-color: #28a745;
+            width: 0;
+            text-align: center;
+            color: white;
+            line-height: 30px;
+            transition: width 0.4s ease;
+        }
+        #progressText {
+            margin-top: 10px;
+            color: #495057;
+        }
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            #scanMoviesButton {
+                width: 100%;
+                font-size: 14px;
+            }
+            .progress-bar-inner {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Scan TV Shows</h1>
+    <button id="scanMoviesButton">Scan All TV Shows</button>
+
+    <div id="progress">
+        <div class="progress-bar">
+            <div class="progress-bar-inner" id="progressBarInner">0%</div>
+        </div>
+        <div id="progressText">No TV Shows processed yet.</div>
+    </div>
+
+    <script>
+        document.getElementById('scanMoviesButton').addEventListener('click', async () => {
+            const response = await fetch('/scanAllLocalShows', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            });
+            if (response.ok) {
+                const eventSource = new EventSource('/progress-shows');
+
+                eventSource.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    const percentage = Math.round((data.index / data.total) * 100);
+
+                    document.getElementById('progressBarInner').style.width = percentage + '%';
+                    document.getElementById('progressBarInner').innerText = percentage + '%';
+                    document.getElementById('progressText').innerText = `Processed ${data.index} of ${data.total} shows: ${data.title}`;
+
+                    if (data.index === data.total) {
+                        document.getElementById('progressText').innerText = 'All TV Shows have been processed.';
+                        alert("All shows have been saved to database!")
+                        eventSource.close();
+                    }
+                };
+            } else {
+                console.error('Error starting the shows scan');
+            }
+        });
+    </script>
+</body>
+</html>
