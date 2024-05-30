@@ -47,21 +47,39 @@
         }
 
         .button {
-        flex: 1;
-        margin: 0 10px;
-        padding: 15px;
-        color: #fff;
-        text-decoration: none;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
-    }
+            flex: 1;
+            margin: 0 10px;
+            padding: 15px;
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
 
-    a {
-        cursor: pointer;
-        text-decoration: none;
-    }
+        a {
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        #progressContainer {
+            width: 100%;
+            background-color: #f3f3f3;
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+        #progressBar {
+            width: 0;
+            height: 30px;
+            background-color: #28a745;
+        }
+
+        #progressText {
+            text-align: center;
+            padding: 5px;
+        }
     </style>
 </head>
 
@@ -71,96 +89,150 @@
         <!-- First Row for Movie -->
         <div class="row">
             <div class="column">
-                <a class="button" style="background-color: #28a745;" href="#" onclick="downloadMoviePosters(event)">Download Movie Poster</a>
+                <a class="button" style="background-color: #28a745;" href="#"
+                    onclick="downloadMoviePosters(event)">Download Movie Poster</a>
             </div>
             <div class="column">
-                <a class="button" style="background-color: #dc3545;" href="#" onclick="deleteMoviePosters(event)">Delete Movie Poster</a>
+                <a class="button" style="background-color: #dc3545;" href="#" onclick="deleteMoviePosters(event)">Delete
+                    Movie Poster</a>
             </div>
         </div>
         <!-- Second Row for TV Show -->
         <div class="row">
             <div class="column">
-                <a class="button" style="background-color: #28a745;" href="#" onclick="downloadTVShowPosters(event)">Download TV Show Poster</a>
+                <a class="button" style="background-color: #28a745;" href="#"
+                    onclick="downloadTVShowPosters(event)">Download TV Show Poster</a>
             </div>
             <div class="column">
-                <a class="button" style="background-color: #dc3545;" href="#" onclick="deleteTVShowPosters(event)">Delete TV Show Poster</a>
+                <a class="button" style="background-color: #dc3545;" href="#"
+                    onclick="deleteTVShowPosters(event)">Delete TV Show Poster</a>
             </div>
         </div>
+
+        <div id="progressContainer">
+            <div id="progressBar"></div>
+        </div>
+        <div id="progressText"></div>
     </div>
 
 
     <script>
         async function downloadMoviePosters(event) {
             event.preventDefault();
-            try {
-                const response = await fetch('/download-movies-posters', {
-                    method: 'GET'
-                });
-                const data = await response.json();
-                if (data.success) {
-                    alert('Movie Posters downloaded and URLs updated successfully');
-                } else {
-                    alert('Failed to download movie posters');
+
+            const response = await fetch('/movie-count');
+            const result = await response.json();
+            const movieCount = result.count;
+
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            const eventSource = new EventSource('/download-movies-posters');
+
+            eventSource.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                if (data.status === 'downloaded') {
+                    // Update progress bar and text
+                    const percentage = ((parseInt(data.count) + 1) / movieCount) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                    progressText.textContent = `Downloaded ${data.name} (${percentage.toFixed(2)}%)`;
+                } else if (data.status === 'complete') {
+                    eventSource.close();
+                    progressText.textContent = 'Download complete';
+                    alert("Movie posters have been download successfully!!")
+                } else if (data.status === 'error') {
+                    eventSource.close();
+                    progressText.textContent = `Error: ${data.message}`;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while downloading movie posters');
-            }
+            };
         }
 
         async function downloadTVShowPosters(event) {
             event.preventDefault();
-            try {
-                const response = await fetch('/download-shows-posters', {
-                    method: 'GET'
-                });
-                const data = await response.json();
-                if (data.success) {
-                    alert('TV Show Posters downloaded and URLs updated successfully');
-                } else {
-                    alert('Failed to download TV show posters');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            const eventSource = new EventSource('/download-shows-posters');
+
+            eventSource.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                if (data.status === 'downloaded') {
+                    // Update progress bar and text
+                    const percentage = ((parseInt(data.count) + 1) / showsCount) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                    progressText.textContent = `Downloaded ${data.name} (${percentage.toFixed(2)}%)`;
+                } else if (data.status === 'complete') {
+                    eventSource.close();
+                    progressText.textContent = 'Download complete';
+                    alert("TV Show posters have been downloaded successfully!!")
+                } else if (data.status === 'error') {
+                    eventSource.close();
+                    progressText.textContent = `Error: ${data.message}`;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while downloading TV show posters');
-            }
+            };
+            const response = await fetch('/shows-count');
+            const result = await response.json();
+            window.showsCount = result.count;
         }
+
 
         async function deleteMoviePosters(event) {
             event.preventDefault();
-            try {
-                const response = await fetch('/delete-movies-posters', {
-                    method: 'GET'
-                });
-                const data = await response.json();
-                if (data.success) {
-                    alert('Movie Posters deleted from directory and URLs updated successfully');
-                } else {
-                    alert('Failed to delete Movie posters');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            const response = await fetch('/movie-count');
+            const result = await response.json();
+            const movieCount = result.count;
+
+            const eventSource = new EventSource('/delete-movies-posters');
+
+            eventSource.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                if (data.status === 'deleted' || data.status === 'not_found') {
+                    const percentage = ((parseInt(data.count) + 1) / movieCount) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                    progressText.textContent = `Deleting ${data.name} (${percentage.toFixed(2)}%)`;
+                } else if (data.status === 'complete') {
+                    eventSource.close();
+                    progressText.textContent = 'Deletion complete';
+                    alert("Movie posters have been deleted successfully!!")
+                } else if (data.status === 'error') {
+                    eventSource.close();
+                    progressText.textContent = `Error: ${data.message}`;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while deleting Movie posters');
-            }
+            };
         }
+
 
         async function deleteTVShowPosters(event) {
             event.preventDefault();
-            try {
-                const response = await fetch('/delete-shows-and-episodes-posters', {
-                    method: 'GET'
-                });
-                const data = await response.json();
-                if (data.success) {
-                    alert('TV Show Posters deleted from directory and URLs updated successfully');
-                } else {
-                    alert('Failed to delete TV show posters');
+            const progressBar = document.getElementById('progressBar');
+            const progressText = document.getElementById('progressText');
+
+            const response = await fetch('/shows-count');
+            const result = await response.json();
+            const showCount = result.count;
+
+            const eventSource = new EventSource('/delete-shows-and-episodes-posters');
+
+            eventSource.onmessage = function (event) {
+                const data = JSON.parse(event.data);
+                if (data.status === 'deleted' || data.status === 'not_found') {
+                    const percentage = ((parseInt(data.count) + 1) / showCount) * 100;
+                    progressBar.style.width = `${percentage}%`;
+                    progressText.textContent = `Deleting ${data.name} (${percentage.toFixed(2)}%)`;
+                } else if (data.status === 'complete') {
+                    eventSource.close();
+                    progressText.textContent = 'Deletion complete';
+                    alert("TV Show posters have been deleted successfully!!")
+                } else if (data.status === 'error') {
+                    eventSource.close();
+                    progressText.textContent = `Error: ${data.message}`;
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                alert('An error occurred while deleting TV show posters');
-            }
+            };
         }
+
     </script>
 </body>
 
