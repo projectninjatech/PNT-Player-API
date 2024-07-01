@@ -56,6 +56,59 @@ router.get('/getSimilarMovies/:movieID', async (req, res) => {
   }
 });
 
+const getUniqueGenres = (movies) => {
+  const genresSet = new Set();
+
+  // Iterate through each show and add its genres to the set
+  movies.forEach((movie) => {
+    movie.genres.forEach((genre) => {
+      genresSet.add(genre);
+    });
+  });
+
+  // Convert the set to an array to get unique genres
+  const uniqueGenres = [...genresSet];
+
+  return uniqueGenres;
+};
+
+
+router.get('/getAllMoviesGenres', async (req, res) => {
+  try {
+    // Retrieve all shows from the database
+    const allMovies = await Movie.find();
+
+    // Extract unique genres from the shows data
+    const uniqueGenres = getUniqueGenres(allMovies);
+
+    // Send the unique genres as a response
+    res.json(uniqueGenres);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/getAllMoviesByGenre', async (req, res) => {
+  try {
+    // Step 1: Fetch all distinct genres
+    const distinctGenres = await Movie.distinct('genres');
+
+    // Step 2: For each genre, fetch shows
+    const moviesByGenre = await Promise.all(
+      distinctGenres.map(async (genre) => {
+        const movie = await Movie.find({ genres: genre });
+        return { genre, movie };
+      })
+    );
+
+    res.json(moviesByGenre);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.get('/searchMovies/:movieName', async (req, res) => {
   try {
     const { movieName } = req.params;

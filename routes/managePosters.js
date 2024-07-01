@@ -43,7 +43,7 @@ router.get('/download-movies-posters', async (req, res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders(); // flush the headers to establish SSE with the client
+    res.flushHeaders(); // flush the headers to establish Server Side Events(SSE) with the client
     try {
         // Fetch all movies with their poster and backdrop URLs
         const movies = await Movies.find({}, 'posterPath backdropPath title');

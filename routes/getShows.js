@@ -30,7 +30,7 @@ const getUniqueGenres = (shows) => {
   return uniqueGenres;
 };
 
-router.get('/getAllGenres', async (req, res) => {
+router.get('/getAllShowsGenres', async (req, res) => {
   try {
     // Retrieve all shows from the database
     const allShows = await Shows.find();
