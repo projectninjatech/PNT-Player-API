@@ -22,6 +22,17 @@
             <p style="font-size: 0.8em; margin-bottom:5px">{{showsDetails.overview}}</p>
             <p style="font-size: 0.8em; font-weight: bold;">{{showsDetails.first_air_date}} • {{showsDetails.genres}} •
                 {{showsDetails.vote_average}}/10</p>
+
+        <label style="font-size: 0.8em; margin-bottom:5px" for="ignoreTitleOnScan">Ignore this show on Scan:</label>
+            <select id="ignoreTitleOnScan" name="ignoreTitleOnScan">
+                <option value="false">False</option>
+                <option value="true">True</option>
+            </select><br>
+
+            <div id="showDirNameContainer" style="display: none;">
+                <label style="font-size: 0.8em; margin-bottom:5px" for="showDirName">TV Show directory name:</label>
+                <input type="text" id="showDirName" name="showDirName" value="" /><br>
+            </div>
         </div>
     </div>
 
@@ -46,8 +57,8 @@
                     <!-- Add a textbox for the download link for each episode -->
                     <label for="episodeDownloadLink">Download Link:</label>
                     <input type="text" id="edl{{../season_number}}{{this.episode_number}}"
-                        name="edl{{../season_number}}{{this.episode_number}}"
-                        value="{{this.downloadLink}}" placeholder="Enter download link" /><br>
+                        name="edl{{../season_number}}{{this.episode_number}}" value="{{this.downloadLink}}"
+                        placeholder="Enter download link" /><br>
                 </div>
             </div>
             {{/each}}
@@ -70,7 +81,23 @@
 </body>
 
 <script>
+
+    document.getElementById('ignoreTitleOnScan').addEventListener('change', function () {
+                const showDirNameContainer = document.getElementById('showDirNameContainer');
+                if (this.value === 'true') {
+                    showDirNameContainer.style.display = 'block';
+                } else {
+                    showDirNameContainer.style.display = 'none';
+                }
+            });
+
+        // Trigger the change event on page load to set the initial state correctly
+    document.getElementById('ignoreTitleOnScan').dispatchEvent(new Event('change'));
+
+
     function submitShowsDetails() {
+        var ignoreTitleOnScanValue = document.getElementById('ignoreTitleOnScan').value;
+        var showDirNameValue = ignoreTitleOnScanValue === 'true' ? document.getElementById('showDirName').value : '';
         // Assuming showsDetails is a JavaScript object
         var showsDetailsData = {
             showDetails: {
@@ -80,60 +107,62 @@
                 overview: "{{showsDetails.overview}}",
                 first_air_date: "{{showsDetails.first_air_date}}",
                 genres: "{{showsDetails.genres}}",
-                vote_average: "{{showsDetails.vote_average}}"
+                vote_average: "{{showsDetails.vote_average}}",
+                ignoreTitleOnScan: ignoreTitleOnScanValue,
+                showDirName: showDirNameValue
             },
             seasons: []
         };
 
         {{#each showsDetails.seasons}}
-            var seasonData = {
-                season_number: "{{this.season_number}}",
-                episodes: []
-            };
+        var seasonData = {
+            season_number: "{{this.season_number}}",
+            episodes: []
+        };
 
-            {{#each this.episodes}}
-                var episodeData = {
-                    episode_number: "{{this.episode_number}}",
-                    name: "{{this.name}}",
-                    runtime: "{{this.runtime}}",
-                    overview: "{{this.overview}}",
-                    poster: "{{this.poster}}",  // Add poster path if available
-                    downloadLink: document.getElementById("edl{{../season_number}}{{this.episode_number}}").value // Get download link from the input field
-                };
+        {{#each this.episodes}}
+        var episodeData = {
+            episode_number: "{{this.episode_number}}",
+            name: "{{this.name}}",
+            runtime: "{{this.runtime}}",
+            overview: "{{this.overview}}",
+            poster: "{{this.poster}}",  // Add poster path if available
+            downloadLink: document.getElementById("edl{{../season_number}}{{this.episode_number}}").value // Get download link from the input field
+        };
 
-                seasonData.episodes.push(episodeData);
-            {{/each}}
-
-            showsDetailsData.seasons.push(seasonData);
+        seasonData.episodes.push(episodeData);
         {{/each}}
 
-                        // Log the showsDetailsData
-                        console.log("Shows Details on button clicked", showsDetailsData);
+        showsDetailsData.seasons.push(seasonData);
+        {{/each}}
 
-                        // You can send this data to the server or perform other actions
+        // Log the showsDetailsData
+        console.log("Shows Details on button clicked", showsDetailsData);
 
-                        fetch('/add-show-details', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(showsDetailsData),
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                console.log('Success:', data);
-                                if (data.success) {
-                                    alert("Show has been added successfully!!")
-                                } else {
-                                    alert("Failed to add the show!!")
-                                }
-                                // Handle success response from the server
-                            })
-                            .catch((error) => {
-                                console.error('Error:', error);
-                                // Handle error
-                            });
-                    }
+        // You can send this data to the server or perform other actions
+
+        fetch('/add-show-details', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(showsDetailsData),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                if (data.success) {
+                    alert("Show has been added successfully!!")
+                } else {
+                    alert("Failed to add the show!!")
+                }
+                // Handle success response from the server
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                // Handle error
+            });
+    }
 </script>
 
 <style>

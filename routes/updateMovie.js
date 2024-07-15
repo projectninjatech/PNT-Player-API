@@ -49,6 +49,7 @@ router.post('/update-movie/:id', async (req, res) => {
                 watchProviders: [req.body.watchProviders],
                 logos: 'https://image.tmdb.org/t/p/original' + req.body.logos,
                 downloadLink: req.body.downloadLink,
+                ignoreTitleOnScan: req.body.ignoreTitleOnScan
             },
             { new: true }
         );

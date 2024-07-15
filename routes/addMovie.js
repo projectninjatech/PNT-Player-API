@@ -125,6 +125,7 @@ router.post('/add-movie-details', async (req, res) => {
             watchProviders: movieDetails.watchProviders,
             logos: 'https://image.tmdb.org/t/p/original' + movieDetails.logos,
             downloadLink: movieDetails.downloadLink,
+            ignoreTitleOnScan: movieDetails.ignoreTitleOnScan
         });
 
         const savedMovie = await newMovie.save();

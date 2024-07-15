@@ -11,7 +11,7 @@ const absolutePath = path.resolve(directory);
 
 let clients = [];
 
-async function scanDirectory(dir, filenames = [], titles = [], filepaths = []) {
+async function scanDirectory(dir, filenames = [], titles = [], filepaths = [], ignoredShowDirNames = []) {
     const files = fs.readdirSync(dir);
 
     for (const file of files) {
@@ -19,7 +19,11 @@ async function scanDirectory(dir, filenames = [], titles = [], filepaths = []) {
         const stat = fs.statSync(filePath);
 
         if (stat.isDirectory()) {
-            await scanDirectory(filePath, filenames, titles, filepaths);
+            if (ignoredShowDirNames.includes(file)) {
+                console.log(`Skipping ignored directory: ${file}`);
+                continue; // Skip this directory
+            }
+            await scanDirectory(filePath, filenames, titles, filepaths, ignoredShowDirNames);
         } else {
             const showTitleMatch = file.match(/^(.+?)\.S\d{2}/);
             let showTitle = showTitleMatch ? showTitleMatch[1] : file;
@@ -148,11 +152,20 @@ router.post('/scanAllLocalShows', async (req, res) => {
 
     try {
         await User.updateMany({}, { $set: { watchedShows: [], showsMylist: [] } });
-        await Shows.deleteMany({});
+        // await Shows.deleteMany({});
+        
+        // Delete all shows except those with ignoreTitleOnScan set to true
+        await Shows.deleteMany({ ignoreTitleOnScan: { $ne: true } });
+
+        // Get all showDirName of shows where ignoreTitleOnScan is true
+        const ignoredShows = await Shows.find({ ignoreTitleOnScan: true }, 'showDirName');
+        const ignoredShowDirNames = ignoredShows.map(show => show.showDirName);
+        console.log("Ignored shows are",ignoredShowDirNames)
 
         res.status(200).send({ message: 'Processing started' });
 
-        const { titles, filenames, filepaths } = await scanDirectory(absolutePath);
+        // const { titles, filenames, filepaths } = await scanDirectory(absolutePath);
+        const { titles, filenames, filepaths } = await scanDirectory(absolutePath, [], [], [], ignoredShowDirNames);
         // console.log("Filepaths", filepaths);
 
         const shows = [];
@@ -216,6 +229,8 @@ router.post('/scanAllLocalShows', async (req, res) => {
                         releaseDate: new Date(modifiedShow.showDetails.first_air_date),
                         name: modifiedShow.showDetails.name,
                         ratings: modifiedShow.showDetails.vote_average,
+                        ignoreTitleOnScan: 'false',
+                        showDirName: '',
                         seasons: modifiedShow.showDetails.seasons.map(season => ({
                             season_number: season.season_number,
                             episodes: season.episodes.map(episode => ({

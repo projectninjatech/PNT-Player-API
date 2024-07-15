@@ -21,6 +21,7 @@ const movieSchema = new mongoose.Schema({
     logos: String,
     downloadLink: String,
     ratings: Number,
+    ignoreTitleOnScan: Boolean
 });
 
 const Movie = mongoose.model('Movie', movieSchema);

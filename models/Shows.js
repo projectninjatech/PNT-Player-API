@@ -8,6 +8,8 @@ const showsSchema = new mongoose.Schema({
     backdropPath: String,
     releaseDate: Date,
     ratings: Number,
+    ignoreTitleOnScan: Boolean,
+    showDirName: String,
     seasons: [{
         season_number: Number,
         episodes: [{

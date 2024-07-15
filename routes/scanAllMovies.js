@@ -14,17 +14,38 @@ let clients = [];
 router.post('/scanAllLocalMovies', async (req, res) => {
 
     await User.updateMany({}, { $set: { watchedMovies: [], mylist: [] } });
-    await Movie.deleteMany({});
+    // await Movie.deleteMany({});
+    await Movie.deleteMany({ ignoreTitleOnScan: { $ne: true } });
+
+    // Find all movies with ignoreTitleOnScan set to true and project only the downloadLink field
+    const movies = await Movie.find({ ignoreTitleOnScan: true }, 'downloadLink');
+
+    // Extract and process the downloadLink to get the filenames
+    const ignoredFilesOnScan = movies.map(movie => {
+        const url = new URL(movie.downloadLink);
+        const path = url.pathname;
+        const filename = path.substring(path.lastIndexOf('/') + 1).replace("%20","");
+        return decodeURIComponent(filename);
+    });
+
+    console.log("Files to be ignored on scan",ignoredFilesOnScan)
+    
     let processedMovies = 0;
 
     res.status(200).send({ message: 'Processing started' });
 
     const files = fs.readdirSync(absolutePath);
-    const regexPattern = /^(.+?)(?:\s|\.)?(\d{4})/;
-    const totalMovies = files.length;
+    
+    // Removing ignored files from the list of all files
+    const filesToScan = files.filter(file => !ignoredFilesOnScan.includes(file));
+    console.log("Files to scan:", filesToScan);
+    console.log("All files",files)
 
-    for (let index = 0; index < files.length; index++) {
-        const file = files[index];
+    const regexPattern = /^(.+?)(?:\s|\.)?(\d{4})/;
+    const totalMovies = filesToScan.length;
+
+    for (let index = 0; index < filesToScan.length; index++) {
+        const file = filesToScan[index];
         const match = file.match(regexPattern);
         const movieName = match ? match[1] : file;
         const modifiedName = movieName.replace(/\(|\)/g, '').replace(/\./g, ' ');
@@ -37,6 +58,7 @@ router.post('/scanAllLocalMovies', async (req, res) => {
         });
 
         const search_term = encodeURIComponent(modifiedName);
+
         const url = `https://api.themoviedb.org/3/search/movie?query=${search_term}&include_adult=false&language=en-US&page=1`;
         const options = {
             method: 'GET',
@@ -49,6 +71,7 @@ router.post('/scanAllLocalMovies', async (req, res) => {
         try {
             const responseData = await fetch(url, options);
             const result = await responseData.json();
+            // console.log("Movies response",result)
 
             // Return only the first result if available
             const movieId = result.results.length > 0 ? result.results[0].id : null;
@@ -100,6 +123,7 @@ router.post('/scanAllLocalMovies', async (req, res) => {
                     watchProviders: watchProviders.map(provider => provider.providerName),
                     logos: 'https://image.tmdb.org/t/p/original',
                     downloadLink: downloadLink, // Use the provided download link
+                    ignoreTitleOnScan: false
                 });
 
                 // Save the movie instance to the database

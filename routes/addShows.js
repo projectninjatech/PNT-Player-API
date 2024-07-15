@@ -130,6 +130,8 @@ router.post('/add-show-details', async (req, res) => {
             releaseDate: new Date(showsDetailsData.showDetails.first_air_date),
             name: showsDetailsData.showDetails.name,
             ratings: Number(showsDetailsData.showDetails.vote_average), // Add the correct property if available in showsDetailsData
+            ignoreTitleOnScan: showsDetailsData.showDetails.ignoreTitleOnScan,
+            showDirName: showsDetailsData.showDetails.showDirName,
             seasons: showsDetailsData.seasons.map(season => ({
                 season_number: Number(season.season_number),
                 episodes: season.episodes.map(episode => ({
