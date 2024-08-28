@@ -6,6 +6,12 @@ const User = require('../models/User')
 const { exec } = require('child_process');
 
 
+const httpServerInfo = {
+    "username": process.env.HTTP_SERVER_USERNAME,
+    "password" : process.env.HTTP_SERVER_PASSWORD
+}
+
+
 // Endpoint to power off the server
 router.get('/poweroff', (req, res) => {
     exec('sudo poweroff', (error, stdout, stderr) => {
@@ -39,7 +45,7 @@ router.post('/register', async (req, res) => {
         const isAdmin = req.body.isAdmin === true; // Set isAdmin to true if it's explicitly set to true in the request body
         const user = await User.register(new User({ username: req.body.username, isAdmin }), req.body.password);
         passport.authenticate('local')(req, res, () => {
-            res.json({ success: true, user });
+            res.json({ success: true, user, httpServerInfo });
         });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
@@ -62,7 +68,7 @@ router.post('/login', (req, res, next) => {
                 return res.status(500).json({ success: false, error: loginErr.message });
             }
             // Send a success response
-            return res.json({ success: true, user });
+            return res.json({ success: true, user, httpServerInfo });
         });
     })(req, res, next);
 });
@@ -71,7 +77,7 @@ router.get('/check-auth', (req, res) => {
     console.log("User auth", req.isAuthenticated())
     if (req.isAuthenticated()) {
         // User is authenticated
-        res.json({ authenticated: true, user: req.user });
+        res.json({ authenticated: true, user: req.user, httpServerInfo });
     } else {
         // User is not authenticated
         res.json({ authenticated: false, user: null });

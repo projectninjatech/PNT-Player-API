@@ -10,6 +10,8 @@ console.log(`Starting HTTP server for ${absolutePath}`);
 const server = httpServer.createServer({
   root: absolutePath,
   cache: -1,
+  username: process.env.HTTP_SERVER_USERNAME,
+  password: process.env.HTTP_SERVER_PASSWORD,
 });
 
 server.listen(8080, () => {

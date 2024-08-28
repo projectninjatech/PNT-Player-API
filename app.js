@@ -19,7 +19,7 @@ app.use(session({
     secret: 'abcd1234', // Secret key used to sign the session ID cookie
     resave: false, // Don't save session if unmodified
     saveUninitialized: false, // Don't create session until something is stored
-    store: new MongoStore({ mongoUrl: process.env.MONGO_DB_URL}), // Store sessions in MongoDB
+    store: new MongoStore({ mongoUrl: process.env.MONGO_DB_URL }), // Store sessions in MongoDB
     cookie: {
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week (adjust as needed)
     },
