@@ -76,8 +76,10 @@ router.get('/addMovie/:movieId', async (req, res) => {
 
         console.log("Movie Details", movieDetails)
 
+        const successMessage = req.query.success ? 'Movie details submitted successfully!' : null;
+
         // Render the addMovie page with the details of the selected movie
-        res.render('addMovie', { movieDetails });
+        res.render('addMovie', { movieDetails, successMessage });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to fetch movie details' });
@@ -130,7 +132,7 @@ router.post('/add-movie-details', async (req, res) => {
 
         const savedMovie = await newMovie.save();
 
-        res.render('addMovie', { successMessage: 'Movie details submitted successfully!' });
+        res.redirect(`/addMovie/${savedMovie.movieID}?success=true`);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Failed to submit movie details' });

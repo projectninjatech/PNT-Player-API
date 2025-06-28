@@ -90,8 +90,7 @@ app.use('/', watchedShows)
 app.use('/', showsMylist)
 app.use('/', managePosters)
 
-
-
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
     console.log(`API is running on port ${port}`)
+    console.log(`For Android emulator, use http://10.0.2.2:${port}`)
 })

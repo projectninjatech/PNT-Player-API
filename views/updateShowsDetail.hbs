@@ -14,14 +14,12 @@
 
     <div class="showDetailsContainer">
         <div class="posterContainer">
-            <img src="{{showsDetails.posterPath}}" alt="Show Poster">
+            <img src="{{showsDetails.posterPath}}" alt="Show Poster" style="width: 150px; border-radius: 10px; border: 4px solid #EAC800;">
         </div>
-
         <div class="detailsTextContainer">
-            <h2>{{showsDetails.name}}</h2>
-            <p style="font-size: 0.8em; margin-bottom:5px">{{showsDetails.overview}}</p>
-            <p style="font-size: 0.8em; font-weight: bold;">{{showsDetails.releaseDate}} • {{showsDetails.genres}} •
-                {{showsDetails.ratings}}/10</p>
+            <h2 style="color: #231F20; text-align: left; font-size: 2.2rem; font-weight: bold;">{{showsDetails.name}}</h2>
+            <p style="color: #231F20; text-align: justify; font-size: 1.1rem; margin-bottom:5px">{{showsDetails.overview}}</p>
+            <p style="color: #231F20; font-size: 1.1rem; font-weight: bold;">{{showsDetails.releaseDate}} • {{showsDetails.genres}} • {{showsDetails.ratings}}/10</p>
         </div>
     </div>
 

@@ -29,7 +29,7 @@
                 <h2>{{this.name}}</h2>
             </a>
             <p style="font-size: 0.8em; margin-bottom:5px">{{this.overview}}</p>
-            <p style="font-size: 0.8em; font-weight: bold;">Release Date: {{this.first_air_date}}</p>
+            <p class="release-date" style="font-size: 0.8em; font-weight: bold; color: #005040;">Release Date: {{this.first_air_date}}</p>
 
         </div>
     </div>
@@ -56,11 +56,29 @@
 
     .submit-btn {
         padding: 10px;
-        background-color: #4CAF50;
+        background-color: #005040;
         color: white;
         border: none;
         border-radius: 5px;
         cursor: pointer;
+        transition: background-color 0.2s;
+    }
+    .submit-btn:hover {
+        background-color: #003d32;
+    }
+
+    .search-container input[type="text"] {
+        background: #CED5D8;
+        color: #231F20;
+        border: 2px solid #757575;
+        border-radius: 5px;
+        padding: 8px;
+        margin-right: 5px;
+        width: 200px;
+    }
+    .search-container input[type="text"]::placeholder {
+        color: #757575;
+        opacity: 1;
     }
 
     .showsDetailsContainer {
@@ -79,6 +97,8 @@
     .posterContainer img {
         width: 100px;
         height: auto;
+        border-radius: 10px;
+        border: 4px solid #EAC800;
     }
 
     .detailsTextContainer {
@@ -86,11 +106,14 @@
     }
 
     .detailsTextContainer h2 {
+        color: #231F20;
         margin-bottom: 10px;
     }
 
     .detailsTextContainer p {
+        color: #231F20;
         margin: 0;
+        text-align: justify;
     }
 
     a {

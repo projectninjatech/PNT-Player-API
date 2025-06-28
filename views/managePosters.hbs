@@ -33,29 +33,59 @@
             display: flex;
             width: 100%;
             margin-bottom: 10px;
+            justify-content: center;
+            gap: 40px;
         }
 
         .column {
             flex: 1;
-            border: 1px solid #ccc;
-            padding: 20px;
+            padding: 0;
             text-align: center;
-        }
-
-        .column:not(:last-child) {
-            border-right: none;
+            border: none;
+            background: none;
+            display: flex;
+            justify-content: center;
         }
 
         .button {
-            flex: 1;
-            margin: 0 10px;
-            padding: 15px;
+            min-width: 260px;
+            margin: 0;
+            padding: 18px 0;
             color: #fff;
             text-decoration: none;
             text-align: center;
             font-weight: bold;
-            border-radius: 5px;
+            border-radius: 8px;
             transition: background-color 0.3s ease;
+            font-size: 1.2rem;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            display: inline-block;
+        }
+
+        .button.download-movie {
+            background-color: #009275;
+        }
+        .button.download-tv {
+            background-color: #007d64;
+        }
+        .button.delete-movie {
+            background-color: #006954;
+        }
+        .button.delete-tv {
+            background-color: #005040;
+        }
+        .button.download-movie:hover {
+            background-color: #007d64;
+        }
+        .button.download-tv:hover {
+            background-color: #005040;
+        }
+        .button.delete-movie:hover {
+            background-color: #005040;
+        }
+        .button.delete-tv:hover {
+            background-color: #003d32;
         }
 
         a {
@@ -66,14 +96,15 @@
         #progressContainer {
             width: 100%;
             background-color: #f3f3f3;
-            border: 1px solid #ccc;
+            border: none;
             margin-top: 20px;
         }
 
         #progressBar {
             width: 0;
             height: 30px;
-            background-color: #28a745;
+            background-color: #EAC800;
+            transition: width 0.3s;
         }
 
         #progressText {
@@ -89,23 +120,19 @@
         <!-- First Row for Movie -->
         <div class="row">
             <div class="column">
-                <a class="button" style="background-color: #28a745;" href="#"
-                    onclick="downloadMoviePosters(event)">Download Movie Poster</a>
+                <a class="button download-movie" href="#" onclick="downloadMoviePosters(event)">Download Movie Poster</a>
             </div>
             <div class="column">
-                <a class="button" style="background-color: #dc3545;" href="#" onclick="deleteMoviePosters(event)">Delete
-                    Movie Poster</a>
+                <a class="button delete-movie" href="#" onclick="deleteMoviePosters(event)">Delete Movie Poster</a>
             </div>
         </div>
         <!-- Second Row for TV Show -->
         <div class="row">
             <div class="column">
-                <a class="button" style="background-color: #28a745;" href="#"
-                    onclick="downloadTVShowPosters(event)">Download TV Show Poster</a>
+                <a class="button download-tv" href="#" onclick="downloadTVShowPosters(event)">Download TV Show Poster</a>
             </div>
             <div class="column">
-                <a class="button" style="background-color: #dc3545;" href="#"
-                    onclick="deleteTVShowPosters(event)">Delete TV Show Poster</a>
+                <a class="button delete-tv" href="#" onclick="deleteTVShowPosters(event)">Delete TV Show Poster</a>
             </div>
         </div>
 

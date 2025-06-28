@@ -5,159 +5,240 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body>
-    <div class="dashboard-box">
-        <h1>Dashboard</h1>
-        <div class="dashboard-buttons">
-            <div class="row">
-                <a class="add-button" href="/addMovieRoute">Add Movie</a>
-                <a class="update-button" href="/updateMovieRoute">Update Movie</a>
-                <a class="delete-button" href="/deleteMovieRoute">Delete Movie</a>
-                <a class="scanAll-button" href="/scan-all-movie-page">Scan All Movies</a>
+    <div class="dashboard-container">
+        <h1>Admin Dashboard</h1>
+        <div class="squircles-container">
+            <!-- Create Squircle -->
+            <div class="squircle create">
+                <div class="squircle-content">
+                    <span class="squircle-text">Create</span>
+                </div>
+                <div class="submenu left">
+                    <a href="/addMovieRoute" class="submenu-item">Movies</a>
+                    <a href="/addShowsRoute" class="submenu-item">TV Shows</a>
+                </div>
+                <div class="submenu right">
+                    <a href="/poster-link-update" class="submenu-item">Posters</a>
+                </div>
             </div>
 
-            <div class="row">
-                <a class="add-button" href="/addShowsRoute">Add TV Shows</a>
-                <a class="update-button" href="/updateShowsRoute">Update TV Shows</a>
-                <a class="delete-button" href="/deleteShowsRoute">Delete TV Shows</a>
-                <a class="scanAll-button" href="/scan-all-shows-page">Scan All TV Shows</a>
+            <!-- Update Squircle -->
+            <div class="squircle update">
+                <div class="squircle-content">
+                    <span class="squircle-text">Update</span>
+                </div>
+                <div class="submenu left">
+                    <a href="/updateMovieRoute" class="submenu-item">Movies</a>
+                    <a href="/updateShowsRoute" class="submenu-item">TV Shows</a>
+                </div>
+                <div class="submenu right">
+                    <a href="/poster-link-update" class="submenu-item">Posters</a>
+                </div>
             </div>
 
-            <div class="row">
-                <a class="add-button" href="/poster-link-update">Manage Posters</a>
-                <a class="update-button" href="/restart">Restart Server</a>
-                <a class="delete-button" href="/poweroff">PowerOff Server</a>
-                <a class="logout-button" href="/admin/logout">Logout</a>
+            <!-- Delete Squircle -->
+            <div class="squircle delete">
+                <div class="squircle-content">
+                    <span class="squircle-text">Delete</span>
+                </div>
+                <div class="submenu left">
+                    <a href="/deleteMovieRoute" class="submenu-item">Movies</a>
+                    <a href="/deleteShowsRoute" class="submenu-item">TV Shows</a>
+                </div>
             </div>
-            
+
+            <!-- Scan Squircle -->
+            <div class="squircle scan">
+                <div class="squircle-content">
+                    <span class="squircle-text">Scan</span>
+                </div>
+                <div class="submenu left">
+                    <a href="/scan-all-movie-page" class="submenu-item">Movies</a>
+                    <a href="/scan-all-shows-page" class="submenu-item">TV Shows</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Controls -->
+        <div class="system-controls">
+            <a href="/restart" class="system-button">Restart Server</a>
+            <a href="/poweroff" class="system-button">PowerOff Server</a>
+            <a href="/admin/logout" class="system-button logout">Logout</a>
         </div>
     </div>
 </body>
 
 <style>
     body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f4f4;
+        font-family: 'Inter', sans-serif;
+        background-color: #FFFFFF;
         margin: 0;
         padding: 0;
+        min-height: 100vh;
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
-        height: 100vh;
+        align-items: center;
     }
 
-    .dashboard-box {
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    .dashboard-container {
+        width: 100%;
+        max-width: 1200px;
+        padding: 2rem;
+        text-align: center;
     }
 
     h1 {
         color: #333;
+        margin-bottom: 3rem;
+        font-weight: 600;
     }
 
-    .dashboard-buttons {
+    .squircles-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 2rem;
+        margin-bottom: 3rem;
+    }
+
+    .squircle {
+        position: relative;
+        width: 250px;
+        height: 250px;
+        background-color: #005040;
+        border-radius: 50px;
+        margin: 0 auto;
         display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
-        width: 100%;
-        margin-top: 20px;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        transition: transform 0.3s ease;
     }
 
-    .row {
+    .squircle:hover {
+        transform: scale(1.05);
+    }
+
+    .squircle-content {
+        color: #FFFFFF;
+        font-size: 2rem;
+        font-weight: 500;
+    }
+
+    .submenu {
+        position: absolute;
+        border-radius: 15px;
+        padding: 1rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        z-index: 100;
         display: flex;
-        justify-content: space-around;
-        width: 100%;
-        margin-bottom: 10px;
+        flex-direction: column;
+        gap: 0.75rem;
+        background: none;
     }
 
-    .add-button {
-        flex: 1;
-        margin: 0 10px;
-        padding: 15px;
-        background-color: #28a745;
-        color: #fff;
+    .submenu.left {
+        right: 100%;
+        top: 50%;
+        transform: translateY(-50%) translateX(-20px);
+        margin-right: 40px;
+    }
+
+    .submenu.right {
+        left: 100%;
+        top: 50%;
+        transform: translateY(-50%) translateX(20px);
+        margin-left: 40px;
+    }
+
+    .squircle:hover .submenu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(-50%) translateX(0);
+    }
+
+    .squircle:hover .submenu.left {
+        transform: translateY(-50%) translateX(0);
+        margin-right: 40px;
+    }
+
+    .squircle:hover .submenu.right {
+        transform: translateY(-50%) translateX(0);
+        margin-left: 40px;
+    }
+
+    .submenu-item {
+        display: block;
+        color: #231F20;
         text-decoration: none;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
+        padding: 0.75rem 2rem;
+        margin: 0;
+        border-radius: 8px;
+        background: #CED5D8;
+        font-weight: 500;
+        font-size: 1rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        transition: background-color 0.2s ease, box-shadow 0.2s ease;
+        min-width: 140px;
+        min-height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    .update-button {
-        flex: 1;
-        margin: 0 10px;
-        padding: 15px;
-        background-color: #007bff;
-        color: #fff;
+    .submenu-item:hover {
+        background-color: #b0bec5;
+        color: #231F20;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+
+    .system-controls {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .system-button {
+        padding: 0.75rem 1.5rem;
+        background-color: #4CAF50;
+        color: #FFFFFF;
         text-decoration: none;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
+        border-radius: 8px;
+        transition: background-color 0.2s ease;
     }
 
-    .delete-button {
-        flex: 1;
-        margin: 0 10px;
-        padding: 15px;
-        background-color: #dc3545;
-        color: #fff;
-        text-decoration: none;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
+    .system-button:hover {
+        background-color: #388E3C;
     }
 
-    .scanAll-button {
-        flex: 1;
-        margin: 0 10px;
-        padding: 15px;
-        background-color: #f87744;
-        color: #fff;
-        text-decoration: none;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
+    .system-button.logout {
+        background-color: #005040;
     }
 
-
-    .logout-button {
-        flex: 1;
-        margin: 0 10px;
-        padding: 15px;
-        background-color: #6c757d;
-        color: #fff;
-        text-decoration: none;
-        text-align: center;
-        font-weight: bold;
-        border-radius: 5px;
-        transition: background-color 0.3s ease;
+    .system-button.logout:hover {
+        background-color: #003d32;
     }
 
-    .add-movie-button:hover {
-        background-color: #276837;
-    }
+    @media (max-width: 768px) {
+        .squircles-container {
+            grid-template-columns: 1fr;
+        }
 
-    .update-movie-button:hover {
-        background-color: #2866a8;
-    }
+        .squircle {
+            width: 200px;
+            height: 200px;
+        }
 
-    .delete-movie-button:hover {
-        background-color: #921e2a;
-    }
-
-    .logout-button:hover {
-        background-color: #313437;
+        .submenu {
+            display: none;
+        }
     }
 </style>
 

@@ -11,19 +11,16 @@
 <body>
     {{!-- <h1>{{movie.title}}</h1> --}}
 
-    <h1>Update Movie Details</h1>
-    <a href="/">Go to Dashboard</a>
+    <h1 style="text-align: center; color: #231F20;">Update Movie Details</h1>
+    <a href="/" style="color: #005040; margin-left: 8rem; font-weight: 500; text-decoration: none; font-size: 1.2rem; display: inline-block; margin-bottom: 20px;">Go to Dashboard</a>
     <div class="movieDetailsContainer">
         <div class="posterContainer">
-            {{!-- <img src="https://image.tmdb.org/t/p/original/{{movie.posterPath}}" alt="Movie Poster"> --}}
-            <img alt="Movie Poster" data-poster-path="{{movie.posterPath}}">
+            <img src="{{movie.posterPath}}" alt="Movie Poster" style="width: 150px; border-radius: 10px; border: 4px solid #EAC800;">
         </div>
-
         <div class="detailsTextContainer">
-            <h2>{{movie.title}}</h2>
-            <p style="font-size: 0.8em; margin-bottom:5px">{{movie.overview}}</p>
-            <p style="font-size: 0.8em; font-weight: bold;">{{movie.releaseDate}} • {{movie.genres}} •
-                {{movie.runtime}}mins</p>
+            <h2 style="color: #231F20; text-align: left; font-size: 2.2rem; font-weight: bold;">{{movie.title}}</h2>
+            <p style="color: #231F20; text-align: justify; font-size: 1.1rem; margin-bottom:5px">{{movie.overview}}</p>
+            <p style="color: #231F20; font-size: 1.1rem; font-weight: bold;">{{movie.releaseDate}} • {{movie.genres}} • {{movie.runtime}}mins</p>
         </div>
     </div>
     <form class="formContainer" action="/update-movie/{{movie._id}}" method="post">
